@@ -11,6 +11,7 @@ import org.springframework.data.r2dbc.config.AbstractR2dbcConfiguration;
 import org.springframework.r2dbc.connection.init.CompositeDatabasePopulator;
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
+import reactor.core.publisher.Mono;
 
 @Configuration
 @Slf4j
@@ -21,6 +22,7 @@ public class DBConfig extends AbstractR2dbcConfiguration {
 
     @Override
     public ConnectionFactory connectionFactory() {
+        log.info("Conectando a la base de datos....",dbUrl);
         return ConnectionFactories.get(dbUrl);
     }
     @Bean
@@ -30,6 +32,7 @@ public class DBConfig extends AbstractR2dbcConfiguration {
         CompositeDatabasePopulator populator = new CompositeDatabasePopulator();
         populator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("schema.sql")));
         initializer.setDatabasePopulator(populator);
+        log.info("Database schema initialized from schema.sql");
         return initializer;
     }
 }

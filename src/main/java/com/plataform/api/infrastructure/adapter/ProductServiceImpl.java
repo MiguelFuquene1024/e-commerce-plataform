@@ -3,11 +3,11 @@ package com.plataform.api.infrastructure.adapter;
 import com.plataform.api.application.service.ProductService;
 import com.plataform.api.domain.Product;
 import com.plataform.api.infrastructure.repository.ProductRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -15,32 +15,44 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
-    private ProductRepository productRepository;
+
+    private final ProductRepository productRepository;
+
 
     @Override
-    public Product createProduct(Product product) {
-
-        productRepository.save(product);
-        return product;
+    public Mono<Product> createProduct(Product product) {
+        Mono<Boolean> existsName = productRepository.findByName(product.getName()).hasElement();
+        return existsName.flatMap(exists -> exists? Mono.error(
+                new Exception("product name already in use")):productRepository.save(product));
     }
 
     @Override
-    public Product getProduct(String productId) {
-        return null;
+    public Mono<Product> getProduct(Integer productId) {
+        return productRepository.findById(productId)
+                .switchIfEmpty(Mono.error(new Exception("product not found")));
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return List.of();
+    public Flux<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 
     @Override
-    public void updateProduct(Product product) {
+    public Mono<Product> updateProduct(Integer id,Product product) {
+        Mono<Boolean> productId = productRepository.findById(product.getId()).hasElement();
+        Mono<Boolean> productRepeatedName = productRepository.findByName(product.getName()).hasElement();
+        product.setId(id);
+        return productId.flatMap(
+                existsId -> existsId ?
+                        productRepeatedName.flatMap(existsName -> existsName?Mono.error(
+                                new Exception("product name already in use")) : productRepository.save(product)) : Mono.error(
+                                        new Exception("product not found"));
 
     }
 
     @Override
-    public void deleteProduct(String productId) {
-
+    public Mono<Void> deleteProduct(Integer productId) {
+        Mono<Boolean> existsId =  productRepository.findById(productId).hasElement();
+        return existsId.flatMap(exists -> exists ? productRepository.deleteById(productId):Mono.error(new Exception("product not found")));
     }
 }

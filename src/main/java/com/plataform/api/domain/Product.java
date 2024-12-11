@@ -11,18 +11,18 @@ import org.springframework.data.relational.core.mapping.Table;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="product")
+@Table(name="producto")
 public class Product {
 
     @Id
-    private int id;
+    private Integer id;
     @Column
     private String name;
     @Column
     private String description;
     @Column
-    private Long price;
+    private float price;
     @Column
-    private int amount;
+    private Integer amount;
 
 }

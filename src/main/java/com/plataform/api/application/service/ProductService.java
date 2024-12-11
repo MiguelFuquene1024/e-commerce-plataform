@@ -2,18 +2,20 @@ package com.plataform.api.application.service;
 
 import com.plataform.api.domain.Product;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface ProductService {
 
-    Product createProduct(Product product);
+    Mono<Product> createProduct(Product product);
 
-    Product getProduct(String productId);
+    Mono<Product> getProduct(Integer productId);
 
-    List<Product> getAllProducts();
+    Flux<Product> getAllProducts();
 
-    void updateProduct(Product product);
+    Mono<Product> updateProduct(Integer id,Product product);
 
-    void deleteProduct(String productId);
+    Mono<Void> deleteProduct(Integer productId);
 }
