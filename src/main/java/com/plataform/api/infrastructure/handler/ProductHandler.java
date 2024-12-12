@@ -1,6 +1,6 @@
 package com.plataform.api.infrastructure.handler;
 
-import com.plataform.api.domain.ProductDto;
+/*import com.plataform.api.domain.ProductDto;
 import com.plataform.api.infrastructure.repository.model.Product;
 import com.plataform.api.infrastructure.adapter.ProductServiceImpl;
 import com.plataform.api.infrastructure.validation.ObjectValidator;
@@ -52,4 +52,4 @@ public class ProductHandler {
         Integer id = Integer.parseInt(request.pathVariable("id"));
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(productService.deleteProduct(id), Product.class);
     }
-}
+}*/

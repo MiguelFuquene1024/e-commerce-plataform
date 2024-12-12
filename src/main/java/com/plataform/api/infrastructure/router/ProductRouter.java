@@ -1,7 +1,7 @@
 package com.plataform.api.infrastructure.router;
 
 
-import com.plataform.api.infrastructure.handler.ProductHandler;
+/*import com.plataform.api.infrastructure.handler.ProductHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.context.annotation.Bean;
@@ -32,4 +32,4 @@ public class ProductRouter {
                 .build();
     }
 
-}
+}*/
