@@ -1,11 +1,12 @@
 package com.plataform.api.infrastructure.handler;
 
-import com.plataform.api.domain.Product;
+import com.plataform.api.domain.ProductDto;
+import com.plataform.api.infrastructure.repository.model.Product;
 import com.plataform.api.infrastructure.adapter.ProductServiceImpl;
+import com.plataform.api.infrastructure.validation.ObjectValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -20,6 +21,8 @@ public class ProductHandler {
 
     private final ProductServiceImpl productService;
 
+    private final ObjectValidator objectValidator;
+
 
     public Mono<ServerResponse> getProducts(ServerRequest request) {
         Flux<Product> products = productService.getAllProducts();
@@ -33,14 +36,16 @@ public class ProductHandler {
     }
 
     public Mono<ServerResponse> createProduct(ServerRequest request) {
-        Mono<Product> product = request.bodyToMono(Product.class);
-        return product.flatMap(p -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(productService.createProduct(p), Product.class));
+        Mono<ProductDto> productDtoMono = request.bodyToMono(ProductDto.class).doOnNext(objectValidator::validate);
+        return productDtoMono.flatMap(productDto -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                .body(productService.createProduct(productDto), Product.class));
     }
 
     public Mono<ServerResponse> updateProduct(ServerRequest request) {
         Integer id = Integer.parseInt(request.pathVariable("id"));
-        Mono<Product> product = request.bodyToMono(Product.class);
-        return product.flatMap(p -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(productService.updateProduct(id,p), Product.class));
+        Mono<ProductDto> productDtoMono = request.bodyToMono(ProductDto.class).doOnNext(objectValidator::validate);;
+        return productDtoMono.flatMap(productDto -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                .body(productService.updateProduct(id,productDto), Product.class));
     }
 
     public Mono<ServerResponse> deteleProduct(ServerRequest request) {

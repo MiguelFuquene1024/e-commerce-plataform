@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS producto  (
+CREATE TABLE IF NOT EXISTS pedido  (
                                      id INT  auto_increment NOT NULL,
                                      name varchar(100) NOT NULL,
                                      description varchar(100) NULL,
