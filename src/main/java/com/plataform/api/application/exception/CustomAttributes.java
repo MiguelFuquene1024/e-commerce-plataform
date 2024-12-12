@@ -1,6 +1,6 @@
 package com.plataform.api.application.exception;
 
-import org.springframework.boot.web.error.ErrorAttributeOptions;
+/*import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -24,4 +24,4 @@ public class CustomAttributes extends DefaultErrorAttributes {
         }
         return errorAttributes;
     }
-}
+}*/

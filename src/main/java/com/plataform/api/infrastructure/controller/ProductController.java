@@ -4,6 +4,7 @@ import com.plataform.api.application.service.ProductService;
 import com.plataform.api.domain.ProductDto;
 import com.plataform.api.infrastructure.adapter.ProductServiceImpl;
 import com.plataform.api.infrastructure.repository.model.Product;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class ProductController {
 
 
     @GetMapping("/get")
-    public Mono<Product> getProduct(@PathVariable Integer id) {
+    public Mono<Product> getProduct( @PathVariable Integer id) {
         return productService.getProduct(id);
     }
     @GetMapping("/get-users")
@@ -28,11 +29,11 @@ public class ProductController {
         return productService.getAllProducts();
     }
     @PostMapping("/create")
-    public Mono<Product> createProduct(@RequestBody ProductDto productDto) {
+    public Mono<Product> createProduct(@Valid @RequestBody ProductDto productDto) {
         return productService.createProduct(productDto);
     }
     @PutMapping("/update")
-    public Mono<Product> updateProduct(@PathVariable Integer id, @RequestBody ProductDto productDto) {
+    public Mono<Product> updateProduct(@Valid @PathVariable Integer id, @RequestBody ProductDto productDto) {
         return productService.updateProduct(id,productDto);
     }
 
