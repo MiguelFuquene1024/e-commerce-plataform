@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.*;
+import org.springframework.web.server.MethodNotAllowedException;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
@@ -25,28 +26,29 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-@RestControllerAdvice(annotations = RestController.class)
+@RestControllerAdvice
 public class GlobalExceptionHandler  {
     // Manejo de ResponseStatusException
     @ExceptionHandler(CustomException.class)
-    public Mono<ResponseEntity<CustomException>> handleResponseStatusException(CustomException ex) {
-        return Mono.just(
-                ResponseEntity
-                        .status(ex.getStatus())
-                        .body(ex));
+    public Mono<CustomException> handleResponseStatusException(CustomException ex) {
+        return Mono.error(new CustomException(ex.getStatus(),ex.getMessage()));
     }
+    @ExceptionHandler(NullPointerException.class)
+    public Mono<CustomException> handleGenericException(NullPointerException ex) {
+        return Mono.error(new CustomException(HttpStatus.INTERNAL_SERVER_ERROR,"Error interno del sistema."));
 
+    }
     // Manejo de excepciones genéricas
     @ExceptionHandler(Exception.class)
-    public Mono<ResponseEntity<CustomException>> handleGenericException(Exception ex) {
-        return Mono.just(
-                ResponseEntity
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(new CustomException(
-                                HttpStatus.INTERNAL_SERVER_ERROR,
-                                "Ocurrió un error inesperado."
-                        ))
-        );
+    public Mono<CustomException> handleGenericException(Exception ex) {
+        return Mono.error(new CustomException(HttpStatus.INTERNAL_SERVER_ERROR,"Error interno del sistema."));
+
+    }
+    @ExceptionHandler(MethodNotAllowedException.class)
+    public Mono<CustomException> handleMethodNotAllowed(MethodNotAllowedException ex) {
+        return Mono.error(
+                new CustomException(HttpStatus.METHOD_NOT_ALLOWED,"Método no permitido."));
+
     }
 
 

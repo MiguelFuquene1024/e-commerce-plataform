@@ -1,6 +1,6 @@
 package com.plataform.api.infrastructure.validation;
 
-/*import com.plataform.api.application.exception.CustomException;
+import com.plataform.api.application.exception.CustomException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -31,4 +31,4 @@ public class ObjectValidator {
             throw new CustomException(HttpStatus.BAD_REQUEST,message);
         }
     }
-}*/
+}

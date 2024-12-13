@@ -1,7 +1,8 @@
 package com.plataform.api.application.exception;
 
-/*import org.springframework.boot.web.error.ErrorAttributeOptions;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -19,9 +20,12 @@ public class CustomAttributes extends DefaultErrorAttributes {
         Throwable throwable = super.getError(request);
         if(throwable instanceof CustomException) {
             CustomException customException = (CustomException) throwable;
-            errorAttributes.put("status", customException.getStatus());
+            errorAttributes.put("status", customException.getStatus().value());
             errorAttributes.put("message", customException.getMessage());
+        }else{
+            errorAttributes.put("status", HttpStatus.NOT_FOUND.value());
+            errorAttributes.put("message", "No existe este endpoint");
         }
         return errorAttributes;
     }
-}*/
+}
